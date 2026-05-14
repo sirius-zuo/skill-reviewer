@@ -23,33 +23,37 @@ The skill is a directory of markdown instruction files. Installation means makin
 
 ### Claude Code
 
-Claude Code discovers skills from its configured skills directories. Copy the repo into your skills folder:
+Claude Code supports native slash commands for skills. The `name: skill-reviewer` frontmatter in `SKILL.md` registers it automatically.
 
 ```bash
-# Clone the repo
 git clone https://github.com/your-org/skill-reviewer.git
-
-# Place it where Claude Code can find it
 cp -r skill-reviewer ~/.claude/skills/skill-reviewer
 ```
 
-Then invoke it in any Claude Code session:
+**Invoke with the slash command:**
 
 ```
-/skill-reviewer
+/skill-reviewer ./my-skill
+/skill-reviewer https://github.com/org/agent-skills
 ```
 
-Or reference it in your `CLAUDE.md` so Claude picks it up automatically:
+**Or via natural language** — Claude recognises the description in `SKILL.md` and loads the skill automatically:
+
+```
+Review the skill at ./my-skill
+Audit the skillset at ./agent-skills/
+```
+
+**To make it available across all projects**, reference it in your global `~/.claude/CLAUDE.md`:
 
 ```markdown
-# CLAUDE.md
-When asked to review a skill or skillset, read and follow the instructions in
+When asked to review a skill or skillset, use the skill at
 ~/.claude/skills/skill-reviewer/SKILL.md.
 ```
 
 ### Codex
 
-Codex agents use `AGENTS.md` to load persistent instructions. Add a reference to the skill:
+Codex reads `AGENTS.md` at startup. Add a reference so the agent knows the skill exists:
 
 ```bash
 git clone https://github.com/your-org/skill-reviewer.git ~/skills/skill-reviewer
@@ -62,18 +66,21 @@ In your project's `AGENTS.md`:
 
 **skill-reviewer** — reviews agent skills and produces an HTML report.
 Instructions: ~/skills/skill-reviewer/SKILL.md
-To use: ask the agent to review a skill directory or GitHub repo.
+To use: ask Codex to review a skill directory or GitHub repo.
 ```
 
-Then in a Codex session:
+**Invoke via natural language:**
 
 ```
-Review the skill at ./my-skill using the skill-reviewer skill.
+Review the skill at ./my-skill
+Audit the skillset at https://github.com/org/agent-skills
 ```
+
+Codex will read `AGENTS.md`, find the skill reference, load `SKILL.md`, and follow its instructions.
 
 ### Cursor
 
-Cursor loads workspace rules from `.cursor/rules/`. Create a rule file that points to the skill:
+Cursor picks up workspace rules from `.cursor/rules/`. Create a rule file that registers the skill:
 
 ```bash
 git clone https://github.com/your-org/skill-reviewer.git ~/skills/skill-reviewer
@@ -91,15 +98,18 @@ To review a skill, read and follow the instructions in:
 ~/skills/skill-reviewer/SKILL.md
 ```
 
-Then in Cursor's chat:
+**Invoke in Cursor's chat:**
 
 ```
 Review the skill at ./my-skill
+@skill-reviewer audit ./agent-skills/
 ```
+
+Cursor matches the rule's `description` field to your request and activates it.
 
 ### Windsurf
 
-Windsurf reads workspace rules from `.windsurfrules`. Append the skill reference:
+Windsurf's Cascade reads `.windsurfrules` on startup. Append the skill reference:
 
 ```bash
 git clone https://github.com/your-org/skill-reviewer.git ~/skills/skill-reviewer
@@ -112,15 +122,16 @@ When asked to review an agent skill or skillset, read and follow the
 instructions in ~/skills/skill-reviewer/SKILL.md.
 ```
 
-Then ask Cascade:
+**Invoke via natural language in Cascade:**
 
 ```
 Review the skill at ./my-skill
+Audit the skillset at ./agent-skills/
 ```
 
 ### GitHub Copilot
 
-Copilot Workspace picks up instructions from `.github/copilot-instructions.md`. Add the skill there:
+Copilot Chat picks up custom instructions from `.github/copilot-instructions.md`:
 
 ```bash
 git clone https://github.com/your-org/skill-reviewer.git ~/skills/skill-reviewer
@@ -131,22 +142,28 @@ In `.github/copilot-instructions.md`:
 ```markdown
 ## Skill Reviewer
 
-When asked to review an agent skill, read and follow the instructions in:
-~/skills/skill-reviewer/SKILL.md
+When asked to review an agent skill or skillset, read and follow the
+instructions in ~/skills/skill-reviewer/SKILL.md.
 ```
 
-Or in any Copilot session, reference the file directly:
+**Invoke in Copilot Chat:**
 
 ```
-Read ~/skills/skill-reviewer/SKILL.md and use it to review the skill at ./my-skill
+Review the skill at ./my-skill
+```
+
+For a one-off review without any config, point Copilot directly at the skill file:
+
+```
+Read ~/skills/skill-reviewer/SKILL.md and review the skill at ./my-skill
 ```
 
 ### Any Other Agent
 
-The skill is plain markdown. Any agent that can read files and follow instructions can use it:
+The skill is plain markdown. Any agent that can read files and follow instructions works:
 
 ```
-Read the file at ~/skills/skill-reviewer/SKILL.md and follow the instructions
+Read ~/skills/skill-reviewer/SKILL.md and follow its instructions
 to review the skill at ./path/to/skill
 ```
 
@@ -154,15 +171,19 @@ to review the skill at ./path/to/skill
 
 ## Usage
 
-### Basic invocation
+### Invocation summary
 
-```
-Review the skill at ./deploy-skill
-```
+| Platform | Native command | Natural language |
+|----------|---------------|-----------------|
+| Claude Code | `/skill-reviewer ./my-skill` | "Review the skill at ./my-skill" |
+| Codex | — | "Review the skill at ./my-skill" |
+| Cursor | — | "Review the skill at ./my-skill" |
+| Windsurf | — | "Review the skill at ./my-skill" |
+| GitHub Copilot | — | "Review the skill at ./my-skill" |
 
-```
-Review the skillset at https://github.com/org/agent-skills
-```
+Claude Code is the only platform with a native slash command, registered automatically from the `name:` field in `SKILL.md`. All other platforms use natural language, activated through their respective rules/instructions config.
+
+### What happens after invocation
 
 The agent will:
 
@@ -187,10 +208,10 @@ When you start a review, the agent asks:
 
 ## Example
 
-**Reviewing a single skill:**
+**Reviewing a single skill** (Claude Code slash command):
 
 ```
-User:   Review the skill at ./deploy-skill
+User:   /skill-reviewer ./deploy-skill
 
 Agent:  Discovered 1 skill: deploy-skill
 
@@ -227,7 +248,7 @@ Agent:  Running dynamic tests...
         Would you like a terminal summary of the top issues?
 ```
 
-**Reviewing a full skillset:**
+**Reviewing a full skillset** (natural language, any platform):
 
 ```
 User:   Review the skillset at ./agent-skills/
