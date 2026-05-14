@@ -98,10 +98,10 @@ For each skill approved for dynamic testing:
 The dispatcher assembles all sub-agent JSON results into a single HTML report using `report-template.html`.
 
 **Report structure:**
-1. **Header** — skill set name, review date, overall approval status, aggregate score
-2. **Dashboard** — traffic-light table: all skills × all 13 categories, color-coded (green ≥8, amber 6–7, red ≤5)
-3. **Per-skill sections** — collapsible; scorecard + per-category findings with gate-level detail, issues, and recommendations; dynamic test results appended if run
-4. **Rollup summary** — cross-skill patterns, top 3 critical issues, overall recommendation (Approve / Approve with Conditions / Reject)
+1. **Header** — skill set name, review date, overall risk level, aggregate score (computed over applicable categories only)
+2. **Dashboard** — traffic-light table: all skills × all 13 categories, color-coded (green ≥8, amber 6–7, red ≤5, grey = N/A)
+3. **Per-skill sections** — collapsible; scorecard (applicable categories only, N/A flagged) + per-category findings with gate-level detail; prioritized recommendations; dynamic test results appended if run
+4. **Rollup summary** — cross-skill patterns, Critical and Important recommendations across all skills, overall risk level with derivation rationale
 
 Report is saved to `docs/review/skill-review-<YYYY-MM-DD>.html`.
 
@@ -133,6 +133,30 @@ The dispatcher prints the report path and offers a terminal summary of the top i
 
 ## Scoring Model (per category)
 
+### Category Applicability
+
+Before scoring, the reviewer determines which categories apply to the skill being reviewed. Non-applicable categories are marked N/A, excluded from the average, and shown as grey in the report.
+
+**Applicability rules:**
+
+| Category | Applies when... | Always? |
+|---|---|---|
+| Skill Definition & Scope | — | Yes |
+| Trigger & Invocation Design | — | Yes |
+| Prompt / Instruction Quality | — | Yes |
+| Decision Logic & Workflow | Skill has branching, loops, or multi-step logic | No |
+| Tool Integration & Dependencies | Skill makes external tool calls | No |
+| Skill Composability | Skill invokes or is designed to be invoked by other skills | No |
+| Context & Memory Management | Skill spans multiple turns or maintains state | No |
+| Test Coverage & Methodology | — | Yes (absence is a finding, not N/A) |
+| Proven Reliability | — | Yes (absence is a finding, not N/A) |
+| Safety & Security | — | Yes |
+| Output Quality & Usability | — | Yes |
+| Performance, Cost & Efficiency | Skill runs loops or makes multiple LLM calls | No |
+| Autonomy Boundaries & Human Handoff | Skill takes actions with real-world consequences | No |
+
+### Gate Structure
+
 Each category rubric file defines three layers:
 
 **Hard Blockers** — binary flags that floor the score at ≤3 regardless of other positives.
@@ -148,11 +172,32 @@ Things that separate acceptable from excellent.
 
 Each gate answer includes a one-line justification. This makes scores reproducible across runs.
 
-**Approval thresholds:**
-- Overall average ≥ 8.0
-- No category below 7
-- Safety & Security must be ≥ 8
-- Skills with unresolved hard blockers are auto-rejected
+**Overall score = average over applicable categories only.**
+
+### Risk Level
+
+The conclusion of each skill review is a **risk level**, not a binary approve/reject. Risk level is derived from scores across applicable categories, with critical categories (Safety, Scope, Trigger & Invocation) weighted more heavily.
+
+| Risk Level | Derivation |
+|---|---|
+| **Low** | All applicable categories ≥ 8; Safety ≥ 9 |
+| **Medium** | 1–2 non-critical categories at 7; no critical category below 8 |
+| **High** | Any critical category (Safety, Scope, Trigger) scores 6–7, OR 3+ applicable categories below 7 |
+| **Critical** | Any hard blocker triggered, OR Safety < 6, OR Scope < 6 |
+
+Risk level is accompanied by a one-paragraph rationale explaining which scores drove it and what would need to change to lower it.
+
+### Recommendations
+
+Each recommendation is:
+- **Linked to the specific gate that failed** — not "improve safety" but "add prompt injection resistance: skill passes user input to tools without sanitization (Safety, Critical Gate 2)"
+- **Priority-tiered:**
+  - 🔴 **Critical** — triggers a hard blocker or drives a High/Critical risk level; must be resolved before use
+  - 🟡 **Important** — caps score, prevents reaching Low risk; should be resolved
+  - 🟢 **Suggested** — would move a 7 to 8 or 9; nice to have
+- **Actionable** — each states exactly what to add, change, or remove
+
+The risk level summary in the report links directly to all Critical and Important recommendations, so a skill author knows precisely what to fix to lower their risk level.
 
 ---
 
@@ -199,6 +244,8 @@ Each sub-agent returns JSON:
   "skill_name": "auth-skill",
   "skill_path": "skills/auth/SKILL.md",
   "type": "main_skill",
+  "applicable_categories": ["scope", "trigger_invocation", "prompt_quality", "safety_security", "output_quality", "test_coverage", "proven_reliability"],
+  "na_categories": ["decision_logic", "tool_integration", "composability", "context_memory", "performance_cost", "autonomy_boundaries"],
   "static_scores": {
     "scope":              { "score": 8, "blockers": [], "gates": {}, "issues": [] },
     "trigger_invocation": { "score": 6, "blockers": [], "gates": {}, "issues": ["Conflicts with deploy-skill trigger"] },
@@ -208,9 +255,22 @@ Each sub-agent returns JSON:
   "static_ceiling_hit": ["safety_security", "proven_reliability"],
   "dynamic_recommended": true,
   "overall_score": 7.1,
-  "approval_status": "approved_with_conditions",
-  "critical_issues": ["Trigger description conflicts with deploy-skill"],
-  "recommendations": ["Narrow trigger to exclude deploy contexts", "Add prompt injection resistance section"]
+  "risk_level": "high",
+  "risk_rationale": "Safety scores 6 — below the critical category floor of 8. Trigger & Invocation scores 6, conflicting with deploy-skill. Resolving the Safety gate failures would move this to Medium risk.",
+  "recommendations": [
+    {
+      "priority": "critical",
+      "category": "safety_security",
+      "gate": "Critical Gate 2",
+      "text": "Add prompt injection resistance: skill passes user input to tools without sanitization"
+    },
+    {
+      "priority": "important",
+      "category": "trigger_invocation",
+      "gate": "Quality Gate 2",
+      "text": "Narrow trigger description to exclude deploy contexts — currently conflicts with deploy-skill trigger"
+    }
+  ]
 }
 ```
 
