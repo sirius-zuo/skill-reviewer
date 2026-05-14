@@ -43,7 +43,7 @@ Produce a JSON manifest:
   "rollup_context": "README content if present, else null",
   "skills": [
     {
-      "skill_name": "name from frontmatter or filename",
+      "skill_name": "name: field from frontmatter; if absent, filename without .md extension",
       "skill_path": "relative/path/to/SKILL.md",
       "type": "main_skill | sub_skill | supporting_tool",
       "parent": "parent skill name if sub_skill, else null",

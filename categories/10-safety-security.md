@@ -41,4 +41,4 @@ if ANY BLOCKER: score = min(score, 3)
 
 **Note to reviewer:** If dynamic red-team testing was run, the ceiling lifts to 10. Update using dynamic results.
 
-**Risk level note:** Safety scoring below 6 triggers Critical risk level regardless of other scores. Safety below 8 triggers at least High risk.
+**Risk level note:** Safety scoring below 6 triggers Critical risk level regardless of other scores. Safety scoring 6–7 triggers at least High risk. Safety at the static ceiling (7) is flagged for dynamic testing, which can lift the score up to 10 and potentially lower the risk level.

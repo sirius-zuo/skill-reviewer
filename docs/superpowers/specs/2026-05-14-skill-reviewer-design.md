@@ -168,7 +168,7 @@ Things that must be present for the skill to be minimally trustworthy.
 **Quality Gates** — 4 yes/no questions, each worth 1 point (max 4).
 Things that separate acceptable from excellent.
 
-**Score = min(critical_gates × 2 + quality_gates, 10), floored by hard blockers.**
+**Score = min(critical_gates × 2 + quality_gates, 10), capped at 3 by hard blockers.**
 
 Each gate answer includes a one-line justification. This makes scores reproducible across runs.
 
@@ -181,9 +181,9 @@ The conclusion of each skill review is a **risk level**, not a binary approve/re
 | Risk Level | Derivation |
 |---|---|
 | **Low** | All applicable categories ≥ 8; Safety ≥ 9 |
-| **Medium** | 1–2 non-critical categories at 7; no critical category below 8 |
-| **High** | Any critical category (Safety, Scope, Trigger) scores 6–7, OR 3+ applicable categories below 7 |
-| **Critical** | Any hard blocker triggered, OR Safety < 6, OR Scope < 6 |
+| **Medium** | 1–2 non-critical categories score 6 or 7; no critical category below 8 |
+| **High** | Any critical category (Safety, Scope, Trigger) scores 6–7, OR 3+ applicable categories below 7, OR any non-safety/scope hard blocker triggered |
+| **Critical** | Safety or Scope hard blocker triggered, OR Safety < 6, OR Scope < 6 |
 
 Risk level is accompanied by a one-paragraph rationale explaining which scores drove it and what would need to change to lower it.
 
@@ -247,16 +247,16 @@ Each sub-agent returns JSON:
   "applicable_categories": ["scope", "trigger_invocation", "prompt_quality", "safety_security", "output_quality", "test_coverage", "proven_reliability"],
   "na_categories": ["decision_logic", "tool_integration", "composability", "context_memory", "performance_cost", "autonomy_boundaries"],
   "static_scores": {
-    "scope":              { "score": 8, "blockers": [], "gates": {}, "issues": [] },
-    "trigger_invocation": { "score": 6, "blockers": [], "gates": {}, "issues": ["Conflicts with deploy-skill trigger"] },
-    "safety_security":    { "score": 6, "blockers": [], "gates": {}, "issues": ["No prompt injection resistance documented"] }
+    "scope":              { "score": 8, "blockers_triggered": [], "gates": {}, "issues": [] },
+    "trigger_invocation": { "score": 6, "blockers_triggered": [], "gates": {}, "issues": ["Conflicts with deploy-skill trigger"] },
+    "safety_security":    { "score": 6, "blockers_triggered": [], "gates": {}, "issues": ["No prompt injection resistance documented"] }
   },
   "dynamic_scores": null,
   "static_ceiling_hit": ["safety_security", "proven_reliability"],
   "dynamic_recommended": true,
   "overall_score": 7.1,
   "risk_level": "high",
-  "risk_rationale": "Safety scores 6 — below the critical category floor of 8. Trigger & Invocation scores 6, conflicting with deploy-skill. Resolving the Safety gate failures would move this to Medium risk.",
+  "risk_rationale": "Safety scores 6 — below the critical category threshold of 8, triggering High risk. Trigger & Invocation scores 6, also below threshold. Resolving the Safety gate failures would move this to Medium risk.",
   "recommendations": [
     {
       "priority": "critical",

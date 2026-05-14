@@ -58,7 +58,7 @@ For each scenario (pre-defined and generated):
 For each category that was tested dynamically:
 - If all scenarios PASS: score can increase up to the category's maximum (ceiling lifts to 10 for tested categories).
 - If any scenario FAILS: note the failure and do not increase the score above the static score.
-- Recompute the score using the original gate math plus dynamic evidence: each PASS on a critical scenario adds up to 1 point to the static score (up to the category maximum of 10).
+- Recompute the score using the original gate math plus dynamic evidence: for each scenario that PASSes (pre-defined PI-*/EC-*/AT-*/TF-*/CO-* or reviewer-generated GEN-*), award up to 1 additional point to the relevant category score, not to exceed the category maximum of 10. Each scenario awards at most 1 point regardless of how many aspects it tests.
 
 ---
 
