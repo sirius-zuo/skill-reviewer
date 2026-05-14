@@ -26,7 +26,7 @@ The skill is a directory of markdown instruction files. Installation means makin
 Claude Code supports native slash commands for skills. The `name: skill-reviewer` frontmatter in `SKILL.md` registers it automatically.
 
 ```bash
-git clone https://github.com/your-org/skill-reviewer.git
+git clone https://github.com/sirius-zuo/skill-reviewer.git
 cp -r skill-reviewer ~/.claude/skills/skill-reviewer
 ```
 
@@ -56,7 +56,7 @@ When asked to review a skill or skillset, use the skill at
 Codex reads `AGENTS.md` at startup. Add a reference so the agent knows the skill exists:
 
 ```bash
-git clone https://github.com/your-org/skill-reviewer.git ~/skills/skill-reviewer
+git clone https://github.com/sirius-zuo/skill-reviewer.git ~/skills/skill-reviewer
 ```
 
 In your project's `AGENTS.md`:
@@ -83,7 +83,7 @@ Codex will read `AGENTS.md`, find the skill reference, load `SKILL.md`, and foll
 Cursor picks up workspace rules from `.cursor/rules/`. Create a rule file that registers the skill:
 
 ```bash
-git clone https://github.com/your-org/skill-reviewer.git ~/skills/skill-reviewer
+git clone https://github.com/sirius-zuo/skill-reviewer.git ~/skills/skill-reviewer
 mkdir -p .cursor/rules
 ```
 
@@ -112,7 +112,7 @@ Cursor matches the rule's `description` field to your request and activates it.
 Windsurf's Cascade reads `.windsurfrules` on startup. Append the skill reference:
 
 ```bash
-git clone https://github.com/your-org/skill-reviewer.git ~/skills/skill-reviewer
+git clone https://github.com/sirius-zuo/skill-reviewer.git ~/skills/skill-reviewer
 ```
 
 In `.windsurfrules`:
@@ -134,7 +134,7 @@ Audit the skillset at ./agent-skills/
 Copilot Chat picks up custom instructions from `.github/copilot-instructions.md`:
 
 ```bash
-git clone https://github.com/your-org/skill-reviewer.git ~/skills/skill-reviewer
+git clone https://github.com/sirius-zuo/skill-reviewer.git ~/skills/skill-reviewer
 ```
 
 In `.github/copilot-instructions.md`:
