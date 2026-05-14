@@ -8,7 +8,7 @@
 
 ## Hard Blockers
 
-If ANY of these are true, floor the score at 3 regardless of gate answers:
+If ANY of these are true, cap the score at 3 regardless of gate answers:
 
 - [ ] **BLOCKER-1:** No one-sentence purpose statement exists anywhere in the skill.
 - [ ] **BLOCKER-2:** There is no indication of what the skill produces or what success looks like.

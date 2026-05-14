@@ -76,8 +76,8 @@ Apply this decision table (critical categories: scope, trigger_invocation, safet
 
 | Condition | Risk Level |
 |---|---|
-| Any hard blocker triggered, OR safety_security < 6, OR scope < 6 | Critical |
-| Any critical category scores 6–7, OR 3+ applicable categories below 7 | High |
+| safety_security hard blocker triggered, OR scope hard blocker triggered, OR safety_security < 6, OR scope < 6 | Critical |
+| Other hard blocker triggered, OR any critical category (safety_security, scope, trigger_invocation) scores 6–7, OR 3+ applicable categories below 7 | High |
 | 1–2 non-critical applicable categories at 7, no critical category below 8 | Medium |
 | All applicable categories ≥ 8, safety_security ≥ 9 | Low |
 

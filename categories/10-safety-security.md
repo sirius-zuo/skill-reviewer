@@ -17,8 +17,8 @@
 ## Critical Gates (2 points each, max 6)
 
 - [ ] **CG-1:** Are prompt injection vectors identified and mitigated — is there explicit handling of inputs designed to override the skill's instructions? (A section titled "Safety" with only "be careful" does NOT pass this gate — must describe specific injection handling.)
-- [ ] **CG-2:** Are tool permissions bounded to least-privilege — does the skill only request the access it actually needs?
-- [ ] **CG-3:** Are irreversible or high-impact actions (file deletion, send message, deploy, modify data) gated behind an explicit confirmation step?
+- [ ] **CG-2:** *(Skip — answer YES automatically — if skill makes no external tool calls)* Are tool permissions bounded to least-privilege — does the skill only request the access it actually needs?
+- [ ] **CG-3:** *(Skip — answer YES automatically — if skill takes no irreversible real-world actions)* Are irreversible or high-impact actions (file deletion, send message, deploy, modify data) gated behind an explicit confirmation step?
 
 ---
 
