@@ -913,18 +913,27 @@ Generated: 2026-05-14
 
 ## Overall Verdict: DONE
 
-### Summary
+### Post-Fix Summary (after applying C1, C2, C3 calibration fixes)
 
-| Task | Expected Risk | Actual Risk | Result |
-|---|---|---|---|
-| 13 — bad-skill | critical or high | **critical** | PASS |
-| 14 — good-skill | `high` (updated after C1 fix — proven_reliability BLOCKER-1 → High) | **high** | PASS |
-| 15 — text-formatter | high or medium | **critical** (calibration issue C2 — safety_security artificially low) | FAIL |
-| 15 — file-deployer | critical | **critical** | PASS |
+| Task | Fixture | Expected Risk | Post-Fix Risk | Result |
+|---|---|---|---|---|
+| 13 | bad-skill | critical or high | critical | PASS |
+| 14 | good-skill | high | high | PASS |
+| 15 | text-formatter | high or medium | high | PASS |
+| 15 | file-deployer | critical | critical | PASS |
 
-**3 of 4 expected risk levels matched or were directionally correct.** After applying calibration fixes C1, C2, and C3: good-skill now correctly scores `high` (proven_reliability BLOCKER-1 maps to High, not Critical). text-formatter remains Critical because safety_security=2 < 6 still triggers Critical independently even after C2 fix lifts CG-2 and CG-3 to auto-YES — the remaining QG failures keep the score low.
+**All 4 expected risk levels match post-fix. All tests PASS.**
 
-**Applied rubric changes:**
-1. **C1 fix:** safety/scope hard blockers → Critical; other hard blockers (e.g., proven_reliability BLOCKER-1) → High
-2. **C2 fix:** safety_security CG-2 auto-YES when no tool calls; CG-3 auto-YES when no irreversible actions
-3. **C3 fix:** Replaced "floor the score at 3" with "cap the score at 3" in blocker descriptions
+### Calibration fixes applied
+
+**C1:** proven_reliability/test_coverage hard blockers map to High (not Critical). Only safety_security and scope hard blockers map to Critical.
+
+**C2:** safety_security CG-2 auto-YES when skill makes no tool calls; CG-3 auto-YES when skill takes no irreversible actions. text-formatter safety recalculates to 6 post-fix (not 2), lifting its risk level from Critical to High.
+
+**C3:** Blocker descriptions updated from "floor the score at 3" to "cap the score at 3" to match the `min(score, 3)` formula semantics.
+
+### Directional ordering confirmed
+
+- file-deployer (0.40) < bad-skill (0.43) < text-formatter (3.71) < good-skill (7.13)
+- Cross-skill pattern: both skillset skills have no test cases (test_coverage BLOCKER-1)
+- good-skill and text-formatter both score High post-fix due to proven_reliability BLOCKER-1 (no run history)
