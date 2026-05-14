@@ -2,7 +2,7 @@
 
 You are assembling the final HTML report from all sub-agent JSON results. You have:
 - An array of skill result JSON objects (one per skill)
-- The `report-template.html` file
+- The `support/report-template.html` file
 
 ---
 
@@ -97,7 +97,7 @@ Format each as a `<li>` item. If no patterns exist, output `<li>No cross-skill p
 
 ## Step 5: Fill Template and Save
 
-1. Read `report-template.html`.
+1. Read `support/report-template.html`.
 2. Replace every `{{placeholder}}` with the computed value.
 3. The `{{dashboard_rows}}` placeholder receives the full HTML of all `<tr>` elements.
 4. The `{{skill_sections}}` placeholder receives the full HTML of all `<details>` blocks.

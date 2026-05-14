@@ -15,7 +15,7 @@ Arguments:
 
 ## Phase 1 — Discovery
 
-Read and follow the instructions in `discover.md` (in the same directory as this SKILL.md).
+Read and follow the instructions in `support/discover.md`.
 
 Apply the discovery rules to the provided path. If a GitHub URL was provided, clone it first.
 
@@ -44,13 +44,13 @@ For each skill in the manifest:
 **If mode = parallel:**
 Spawn one sub-agent per skill simultaneously using the Agent tool. Each sub-agent receives:
 - The skill's files (all_files from the manifest)
-- The full content of `static-review.md`
+- The full content of `support/static-review.md`
 - The full content of all 13 category rubric files from `categories/`
 - The configuration from Phase 2
 - Instruction: "Review this skill statically and return the JSON result described in static-review.md."
 
 **If mode = single:**
-Review each skill in sequence within this session, following the steps in `static-review.md` for each skill.
+Review each skill in sequence within this session, following the steps in `support/static-review.md` for each skill.
 
 Collect all JSON results. If any sub-agent fails to return valid JSON, note the error and continue with remaining skills.
 
@@ -80,8 +80,8 @@ For each approved skill:
 Spawn a sub-agent (or run in-session if mode=single) with:
 - The skill's files
 - The static review JSON result for this skill
-- The full content of `dynamic-review.md`
-- Relevant scenario files from `scenarios/` (per the mapping in dynamic-review.md)
+- The full content of `support/dynamic-review.md`
+- Relevant scenario files from `scenarios/` (per the mapping in support/dynamic-review.md)
 - Configuration from Phase 2
 
 Instruction: "Run dynamic testing on this skill using the JSON result and scenario files. Return the updated JSON."
@@ -90,7 +90,7 @@ Collect updated JSON results.
 
 ## Phase 6 — Report Generation
 
-Read `report.md` and follow its assembly instructions to produce the HTML report.
+Read `support/report.md` and follow its assembly instructions to produce the HTML report.
 
 Use all collected JSON results (static + dynamic where available).
 

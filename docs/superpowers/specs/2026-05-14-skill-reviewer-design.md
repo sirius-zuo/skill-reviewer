@@ -206,11 +206,12 @@ The risk level summary in the report links directly to all Critical and Importan
 ```
 skill-reviewer/
   SKILL.md                      # dispatcher: discovery, mode selection, orchestration
-  discover.md                   # skill discovery instructions
-  static-review.md              # static analysis sub-agent instructions
-  dynamic-review.md             # dynamic testing sub-agent instructions
-  report.md                     # HTML report assembly instructions
-  report-template.html          # HTML/CSS template
+  support/
+    discover.md                 # skill discovery instructions
+    static-review.md            # static analysis sub-agent instructions
+    dynamic-review.md           # dynamic testing sub-agent instructions
+    report.md                   # HTML report assembly instructions
+    report-template.html        # HTML/CSS template
   categories/
     01-scope.md
     02-trigger-invocation.md
