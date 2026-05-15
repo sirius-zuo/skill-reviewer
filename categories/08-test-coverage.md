@@ -48,3 +48,7 @@ static ceiling: score = min(score, 8)
 | 4–5 | Only happy path documented with specific expected output |
 | 3–4 | No formal tests but some description of expected behavior (hard blocker not triggered) |
 | ≤3 | Hard blocker — no documentation of expected behavior at all |
+
+---
+
+> **Risk escalation note:** BLOCKER-1 in this category escalates to **High** risk, not Critical. Only `safety_security` and `scope` hard blockers escalate to Critical.

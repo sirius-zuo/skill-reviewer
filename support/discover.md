@@ -2,6 +2,22 @@
 
 You are performing the discovery phase of a skill review. Your job is to scan a directory and produce a manifest of all skills found.
 
+## Input Validation
+
+Before scanning, validate the path argument:
+
+**Local path:**
+- Verify the path exists and is a readable directory.
+- Reject paths containing shell metacharacters: `;`, `|`, `&`, `$`, or backtick. If found, report: "The path `[value]` contains unsafe characters and cannot be scanned. Please provide a valid local path." and stop.
+- If the path does not exist or is not readable, report: "The path `[value]` does not exist or is not readable." and stop.
+
+**GitHub URL:**
+- Verify the URL matches the pattern `https://github.com/<org>/<repo>` (with optional `.git` suffix).
+- If the clone fails, report the error (exit code + message) and stop. Example: "Clone failed: repository not found at [URL]. Verify the URL and your git credentials." Do not attempt discovery on a partially-cloned directory.
+
+**Neither:**
+- If the value is neither a valid local path nor a valid GitHub URL, report: "The path `[value]` is not a valid local path or GitHub URL. Please provide a valid path." and stop.
+
 ## What counts as a skill
 
 A file is a skill if it meets ANY of these criteria:
@@ -39,11 +55,14 @@ If a `README.md` file exists at the root and does NOT qualify as a skill file (n
 
 ## Output format
 
+Always resolve `root_path` to an absolute canonical path before writing the manifest (expand `~`, resolve symlinks, resolve relative paths from the working directory).
+
 Produce a JSON manifest:
 
 ```json
 {
-  "root_path": "/path/to/reviewed/dir",
+  "root_path": "/absolute/canonical/path/to/reviewed/dir",
+  "self_review": false,
   "rollup_context": "README content if present, else null",
   "skills": [
     {
@@ -63,3 +82,6 @@ Produce a JSON manifest:
 - If NO skills are found: output `{ "skills": [], "error": "No skill files found in directory" }` and stop.
 - If a file has frontmatter but no `name:` field: treat as supporting artifact.
 - If two skills share the same `name`: flag as a conflict in the manifest with `"name_conflict": true`.
+- **Self-review guard:** After generating the manifest, compare the absolute `root_path` to the absolute path of the skill-reviewer's installation directory (the parent of the `support/` directory containing this file — the main agent knows this from where it found `support/discover.md`). If they are the same, emit a warning:
+  > "Warning: the provided path appears to be the skill-reviewer itself. Reviewing a skill against its own rubric may produce unreliable results. Do you want to proceed? [yes / no]"
+  If the user answers no, stop. If yes, proceed and set `"self_review": true` in the manifest (default is `false`).
