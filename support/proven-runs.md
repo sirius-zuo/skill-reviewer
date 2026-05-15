@@ -6,7 +6,7 @@ Log of verified end-to-end executions. Append a new entry after each real run.
 
 ## Run 1 — 2026-05-15
 
-- **Input:** /Users/jinzuo/projects/skill-reviewer (self-review)
+- **Input:** skill-reviewer project root (self-review)
 - **Skills reviewed:** 1 (skill-reviewer)
 - **Mode:** parallel
 - **Static analysis:** completed — 13 categories scored, all applicable
