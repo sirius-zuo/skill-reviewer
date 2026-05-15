@@ -2,6 +2,22 @@
 
 You are performing the discovery phase of a skill review. Your job is to scan a directory and produce a manifest of all skills found.
 
+## Input Validation
+
+Before scanning, validate the path argument:
+
+**Local path:**
+- Verify the path exists and is a readable directory.
+- Reject paths containing shell metacharacters: `;`, `|`, `&`, `$`, or backtick. If found, report: "The path `[value]` contains unsafe characters and cannot be scanned. Please provide a valid local path." and stop.
+- If the path does not exist or is not readable, report: "The path `[value]` does not exist or is not readable." and stop.
+
+**GitHub URL:**
+- Verify the URL matches the pattern `https://github.com/<org>/<repo>` (with optional `.git` suffix).
+- If the clone fails, report the error (exit code + message) and stop. Example: "Clone failed: repository not found at [URL]. Verify the URL and your git credentials." Do not attempt discovery on a partially-cloned directory.
+
+**Neither:**
+- If the value is neither a valid local path nor a valid GitHub URL, report: "The path `[value]` is not a valid local path or GitHub URL. Please provide a valid path." and stop.
+
 ## What counts as a skill
 
 A file is a skill if it meets ANY of these criteria:
@@ -63,3 +79,6 @@ Produce a JSON manifest:
 - If NO skills are found: output `{ "skills": [], "error": "No skill files found in directory" }` and stop.
 - If a file has frontmatter but no `name:` field: treat as supporting artifact.
 - If two skills share the same `name`: flag as a conflict in the manifest with `"name_conflict": true`.
+- **Self-review guard:** After generating the manifest, check whether `root_path` resolves to the same directory as the skill-reviewer installation (i.e., the directory containing this `support/discover.md` file). If so, emit a warning:
+  > "Warning: the provided path appears to be the skill-reviewer itself. Reviewing a skill against its own rubric may produce unreliable results. Do you want to proceed? [yes / no]"
+  If the user answers no, stop. If yes, proceed and note `"self_review": true` in the manifest.
