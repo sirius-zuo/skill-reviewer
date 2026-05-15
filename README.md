@@ -296,13 +296,24 @@ Categories that don't apply are marked N/A and excluded from the score average.
 
 Each category uses a three-tier gate structure:
 
-- **Hard Blockers** — binary flags that cap the score at ≤ 3 regardless of other gates
-- **Critical Gates** — 3 yes/no questions, 2 points each (max 6 points)
-- **Quality Gates** — 4 yes/no questions, 1 point each (max 4 points)
+### Hard Blockers
+Binary flags that immediately cap the score at ≤ 3, regardless of how well the skill does elsewhere. A Hard Blocker means a fundamental requirement is missing — for example, no error handling at all, or credentials passed without redaction. If you see a 🔴 BLOCKER in the report, that category's score was capped here.
 
-`score = min(critical_gates × 2 + quality_gates, 10)`, capped at 3 if a Hard Blocker fires.
+### Critical Gates (CG)
+Three yes/no questions per category, worth **2 points each** (max 6 points). These cover the things a skill must get right to be minimally trustworthy — for example, "does this skill explicitly handle prompt injection?" Each answer includes a one-line justification so scores are reproducible.
 
-Every gate answer includes a one-line justification, making scores reproducible across runs.
+### Quality Gates (QG)
+Four yes/no questions per category, worth **1 point each** (max 4 points). These separate acceptable from excellent — things like whether examples are provided, whether output length is bounded, or whether failure modes are categorised. A skill can be usable without passing all QGs, but passing them moves the score from 6 toward 10.
+
+### Formula
+
+```
+score = (CG_yes × 2) + (QG_yes × 1)   max = 10
+```
+
+Capped at 3 if a Hard Blocker fires. For example, a category where 1 CG passes and 0 QGs pass scores 2.
+
+Some categories have a **static ceiling** below 10 (e.g. Safety caps at 7 statically) because the remaining points can only be earned through dynamic testing — actually running the skill against adversarial scenarios, not just reading its instructions.
 
 ## Risk Levels
 
