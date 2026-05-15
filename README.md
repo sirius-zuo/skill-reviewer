@@ -173,15 +173,15 @@ to review the skill at ./path/to/skill
 
 ### Invocation summary
 
-| Platform | Native command | Natural language |
-|----------|---------------|-----------------|
-| Claude Code | `/skill-reviewer ./my-skill` | "Review the skill at ./my-skill" |
-| Codex | — | "Review the skill at ./my-skill" |
-| Cursor | — | "Review the skill at ./my-skill" |
-| Windsurf | — | "Review the skill at ./my-skill" |
-| GitHub Copilot | — | "Review the skill at ./my-skill" |
+| Platform | How to invoke |
+|----------|--------------|
+| Claude Code | `/skill-reviewer ./my-skill` |
+| Codex | `Review the skill at ./my-skill` |
+| Cursor | `Review the skill at ./my-skill` |
+| Windsurf | `Review the skill at ./my-skill` |
+| GitHub Copilot | `Review the skill at ./my-skill` |
 
-Claude Code is the only platform with a native slash command, registered automatically from the `name:` field in `SKILL.md`. All other platforms use natural language, activated through their respective rules/instructions config.
+Claude Code registers `/skill-reviewer` automatically from the `name:` field in `SKILL.md`. On all other platforms the agent picks up the skill from its rules or instructions config and activates it when you describe what you want.
 
 ### What happens after invocation
 
