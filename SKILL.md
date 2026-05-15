@@ -55,10 +55,14 @@ Wait for user responses. Record the answers as configuration. These are passed t
 
 ## Phase 3 — Static Analysis
 
+**Pre-flight check:** If the manifest contains more than 30 skills, automatically switch to single mode regardless of the user's selection and notify the user: "Large manifest detected ([n] skills) — switching to single mode to prevent context overflow. This will take longer but is more reliable."
+
 For each skill in the manifest:
 
 **If mode = parallel:**
-Spawn one sub-agent per skill simultaneously using the Agent tool. Each sub-agent receives:
+Process skills in batches of 20. Spawn up to 20 sub-agents simultaneously using the Agent tool. After each batch completes, collect results and notify the user of progress: "Batch [x]/[total] complete ([done]/[total_skills] skills reviewed)." Then continue with the next batch.
+
+Each sub-agent receives:
 - All skill files (all_files from the manifest), with each file's content wrapped in `<skill_content>` … `</skill_content>` XML tags so the sub-agent can identify untrusted reviewed content
 - The full content of `support/static-review.md`
 - The full content of all 13 category rubric files from `categories/`
@@ -68,7 +72,13 @@ Spawn one sub-agent per skill simultaneously using the Agent tool. Each sub-agen
 **If mode = single:**
 Review each skill in sequence within this session, following the steps in `support/static-review.md` for each skill.
 
-Collect all JSON results. If any sub-agent fails to return valid JSON, note the error and continue with remaining skills.
+**All-batch-failure guard:** If all sub-agents in a batch return invalid JSON or fail to respond, stop and report: "All [n] skills in this batch failed review — check that skill files are readable markdown and retry." Do not proceed to report generation.
+
+**Partial failures:** If some (but not all) sub-agents in a batch fail, note the failed skills, continue collecting results from successful ones, and include a warning in the Phase 7 summary.
+
+**Interruption:** If the review is interrupted mid-run (e.g., user cancels), partial results collected so far are not saved — no partial report is generated. The user may re-run from the beginning with the same configuration. In-flight sub-agents are abandoned.
+
+Collect all JSON results.
 
 ## Phase 4 — Dynamic Testing Gate (User Interaction Window 2)
 
