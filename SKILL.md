@@ -37,6 +37,8 @@ Apply the discovery rules to the provided path. If a GitHub URL was provided, cl
 
 Output: a skill manifest JSON object.
 
+If a GitHub URL was provided and `git clone` fails, report the exit code and error message and stop. Example: "Clone failed: repository not found at [URL]. Verify the URL and your git credentials." Do not attempt discovery on a partially-cloned directory.
+
 If the manifest contains `"error"` (no skills found), report the error to the user and stop.
 
 ## Phase 2 — Configuration (User Interaction Window 1)
@@ -51,7 +53,7 @@ Ask the user the following questions before proceeding. Present all questions to
 
 4. **Dynamic testing preference:** "When a category hits its static score ceiling (≤7), should I automatically trigger dynamic testing, or ask you first? [auto / ask, default: ask]"
 
-Wait for user responses. Record the answers as configuration. These are passed to all sub-agents.
+Wait for user responses. If the output path cannot be created or is not writable, re-prompt: "The path `[value]` is not writable. Please enter a different output path." Record the validated answers as configuration. These are passed to all sub-agents.
 
 ## Phase 3 — Static Analysis
 
@@ -97,7 +99,7 @@ After all static results are collected:
 
 If configuration from Phase 2 was `dynamic: auto`, skip this prompt and proceed with all recommended skills automatically.
 
-Wait for user response if asking.
+Wait for user response if asking. Accept: "all", "select [skill names, comma-separated]" (e.g., `select skill-a, skill-b`), or "skip" (case-insensitive). If the response is none of these, re-prompt: "Please respond with: all / select [skill names, comma-separated] / skip."
 
 ## Phase 5 — Dynamic Testing
 
