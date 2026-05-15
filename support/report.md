@@ -103,9 +103,11 @@ Format each as a `<li>` item. If no patterns exist, output `<li>No cross-skill p
 4. The `{{skill_sections}}` placeholder receives the full HTML of all `<details>` blocks.
 5. `{{overall_risk_class}}` is the lowercase risk level: `low`, `medium`, `high`, or `critical`.
 
-Save the completed HTML to: `{{output_path}}/skill-review-{{YYYY-MM-DD}}.html`
+Save the completed HTML to: `{{output_path}}/skill-review-{{YYYY-MM-DD}}T{{HHMM}}.html`
 - `output_path` comes from the configuration provided by the dispatcher (defaults to `docs/review/` inside the reviewed skill's root)
-- Use today's date for `{{YYYY-MM-DD}}`
+- Use today's date for `{{YYYY-MM-DD}}` and the current local time (hours + minutes, 24-hour) for `{{HHMM}}`
+- Example: `skill-review-2026-05-14T1437.html`
+- This ensures two runs on the same day never overwrite each other
 
 Create the output directory if it does not exist.
 
