@@ -5,29 +5,32 @@ You are performing the discovery phase of a skill review. Your job is to scan a 
 ## What counts as a skill
 
 A file is a skill if it meets ANY of these criteria:
-- Named `SKILL.md` (any case)
-- Named `index.md` AND contains YAML frontmatter with a `name:` field
-- Any `.md` file with YAML frontmatter containing a `name:` field
+- Named `SKILL.md` (case-insensitive)
+- Named `skill.md`, `AGENT.md`, or `agent.md`
+- Any `.md` file with YAML frontmatter containing BOTH a `name:` field AND a `description:` field
+
+A file with only one of `name:` or `description:` does NOT qualify — both are required.
 
 A directory is a sub-skill if it contains its own skill file (by the rules above).
 
 ## What counts as a supporting artifact
 
-Any file that is NOT a skill file but lives in a skill's directory:
-- Scripts (`.sh`, `.py`, `.js`, etc.)
-- HTML templates (`.html`)
-- Scenario files (`.md` files without `name:` frontmatter)
-- Example files
+Any non-skill file that lives in a skill's directory:
+- Instruction files (`.md` without qualifying frontmatter)
+- Scripts (`.sh`, `.py`, `.js`, `.ts`, etc.)
+- Templates (`.html`, `.json`, `.yaml`)
+- Example and scenario files
 
 Supporting artifacts are catalogued under their parent skill and included in that skill's review context.
 
 ## Directory scanning rules
 
 1. Start from the root directory provided.
-2. For each `.md` file found, check if it qualifies as a skill (frontmatter with `name:`).
-3. For each subdirectory, recurse and apply the same rules.
-4. A subdirectory whose skill file is a DIFFERENT skill from the parent = sub-skill relationship.
-5. If a GitHub URL was provided instead of a local path, clone it to a temp directory first: `git clone <url> /tmp/skill-review-<timestamp>`, then scan from there.
+2. **Skip all invisible files and directories** — any file or folder whose name begins with `.` (e.g., `.git`, `.github`, `.claude`, `.DS_Store`, `.cursor`). Never recurse into them.
+3. For each `.md` file found, check if it qualifies as a skill.
+4. For each visible subdirectory, recurse and apply the same rules.
+5. A subdirectory whose skill file is a DIFFERENT skill from the parent = sub-skill relationship.
+6. If a GitHub URL was provided instead of a local path, clone it to a temp directory first: `git clone <url> /tmp/skill-review-<timestamp>`, then scan from there.
 
 ## README handling
 
