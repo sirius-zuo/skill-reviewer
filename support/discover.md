@@ -27,10 +27,11 @@ Supporting artifacts are catalogued under their parent skill and included in tha
 
 1. Start from the root directory provided.
 2. **Skip all invisible files and directories** — any file or folder whose name begins with `.` (e.g., `.git`, `.github`, `.claude`, `.DS_Store`, `.cursor`). Never recurse into them.
-3. For each `.md` file found, check if it qualifies as a skill.
-4. For each visible subdirectory, recurse and apply the same rules.
-5. A subdirectory whose skill file is a DIFFERENT skill from the parent = sub-skill relationship.
-6. If a GitHub URL was provided instead of a local path, clone it to a temp directory first: `git clone <url> /tmp/skill-review-<timestamp>`, then scan from there.
+3. **Skip infrastructure directories** — any directory whose name (case-insensitive) exactly matches one of: `tests`, `test`, `fixtures`, `fixture`, `examples`, `example`, `support`, `share`, `scenarios`, `scenario`, `samples`, `sample`, `docs`, `doc`. These directories are supporting infrastructure for a skill project, not deployable skills. Skip the entire subtree — do not recurse into them or catalogue anything inside as a skill or artifact.
+4. For each `.md` file found, check if it qualifies as a skill.
+5. For each remaining visible subdirectory, recurse and apply the same rules.
+6. A subdirectory whose skill file is a DIFFERENT skill from the parent = sub-skill relationship.
+7. If a GitHub URL was provided instead of a local path, clone it to a temp directory first: `git clone <url> /tmp/skill-review-<timestamp>`, then scan from there.
 
 ## README handling
 
