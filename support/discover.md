@@ -55,11 +55,14 @@ If a `README.md` file exists at the root and does NOT qualify as a skill file (n
 
 ## Output format
 
+Always resolve `root_path` to an absolute canonical path before writing the manifest (expand `~`, resolve symlinks, resolve relative paths from the working directory).
+
 Produce a JSON manifest:
 
 ```json
 {
-  "root_path": "/path/to/reviewed/dir",
+  "root_path": "/absolute/canonical/path/to/reviewed/dir",
+  "self_review": false,
   "rollup_context": "README content if present, else null",
   "skills": [
     {
@@ -79,6 +82,6 @@ Produce a JSON manifest:
 - If NO skills are found: output `{ "skills": [], "error": "No skill files found in directory" }` and stop.
 - If a file has frontmatter but no `name:` field: treat as supporting artifact.
 - If two skills share the same `name`: flag as a conflict in the manifest with `"name_conflict": true`.
-- **Self-review guard:** After generating the manifest, check whether `root_path` resolves to the same directory as the skill-reviewer installation (i.e., the directory containing this `support/discover.md` file). If so, emit a warning:
+- **Self-review guard:** After generating the manifest, compare the absolute `root_path` to the absolute path of the skill-reviewer's installation directory (the parent of the `support/` directory containing this file — the main agent knows this from where it found `support/discover.md`). If they are the same, emit a warning:
   > "Warning: the provided path appears to be the skill-reviewer itself. Reviewing a skill against its own rubric may produce unreliable results. Do you want to proceed? [yes / no]"
-  If the user answers no, stop. If yes, proceed and note `"self_review": true` in the manifest.
+  If the user answers no, stop. If yes, proceed and set `"self_review": true` in the manifest (default is `false`).
