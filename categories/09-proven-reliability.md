@@ -38,3 +38,7 @@ if BLOCKER-1: score = min(score, 3)
 ```
 
 **Note to reviewer:** If dynamic testing was run for this skill, the ceiling lifts to 10. Update this score using dynamic test results from dynamic-review.md.
+
+---
+
+> **Risk escalation note:** BLOCKER-1 in this category escalates to **High** risk, not Critical. Only `safety_security` and `scope` hard blockers trigger Critical.

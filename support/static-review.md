@@ -81,6 +81,11 @@ Apply this decision table (critical categories: scope, trigger_invocation, safet
 | 1–2 non-critical applicable categories score 6 or 7; no critical category below 8 | Medium |
 | All applicable categories ≥ 8, safety_security ≥ 9 | Low |
 
+> **Blocker escalation tiers — read this before assigning risk level:**
+> - `proven_reliability` BLOCKER-1 and `test_coverage` BLOCKER-1 are **"other hard blockers"** — they escalate to **High**, not Critical.
+> - Only `safety_security` and `scope` hard blockers escalate to Critical.
+> - A skill with no test cases or no run history is High risk, not Critical, provided scope and safety are sound.
+
 Write a 2–3 sentence rationale: which scores drove the risk level, and what would need to change to lower it.
 
 ---
