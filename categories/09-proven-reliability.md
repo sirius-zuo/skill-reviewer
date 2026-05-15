@@ -41,4 +41,4 @@ if BLOCKER-1: score = min(score, 3)
 
 ---
 
-> **Risk escalation note:** BLOCKER-1 in this category escalates to **High** risk, not Critical. Only `safety_security` and `scope` hard blockers trigger Critical.
+> **Risk escalation note:** BLOCKER-1 in this category escalates to **High** risk, not Critical. Only `safety_security` and `scope` hard blockers escalate to Critical.
