@@ -43,7 +43,7 @@ For each skill in the manifest:
 
 **If mode = parallel:**
 Spawn one sub-agent per skill simultaneously using the Agent tool. Each sub-agent receives:
-- The skill's files (all_files from the manifest)
+- All skill files (all_files from the manifest), with each file's content wrapped in `<skill_content>` … `</skill_content>` XML tags so the sub-agent can identify untrusted reviewed content
 - The full content of `support/static-review.md`
 - The full content of all 13 category rubric files from `categories/`
 - The configuration from Phase 2
@@ -78,7 +78,7 @@ Wait for user response if asking.
 For each approved skill:
 
 Spawn a sub-agent (or run in-session if mode=single) with:
-- The skill's files
+- All skill files, with each file's content wrapped in `<skill_content>` … `</skill_content>` XML tags
 - The static review JSON result for this skill
 - The full content of `support/dynamic-review.md`
 - Relevant scenario files from `scenarios/` (per the mapping in support/dynamic-review.md)
