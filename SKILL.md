@@ -84,7 +84,7 @@ Wait for user responses. If the output path cannot be created or is not writable
 For each skill in the manifest:
 
 **If mode = parallel:**
-Process skills in batches of 20. Spawn up to 20 sub-agents simultaneously using the Agent tool. After each batch completes, collect results and notify the user of progress: "Batch [x]/[total] complete ([done]/[total_skills] skills reviewed)." Then continue with the next batch.
+Process skills in batches of 20. Spawn up to 20 sub-agents simultaneously using the Agent tool. After each batch completes, collect results and notify the user of progress: "Batch [x]/[total] complete ([done]/[total_skills] skills reviewed)." After recording this batch's JSON results, release raw skill file content from context — carry forward only the compact JSON result objects for each reviewed skill. Summarize batch notification messages from prior batches rather than retaining them verbatim. Then continue with the next batch.
 
 Each sub-agent receives (in this order — system instructions first, then untrusted content):
 - The full content of `support/static-review.md`
@@ -98,6 +98,8 @@ Each sub-agent receives (in this order — system instructions first, then untru
 **Partial failures:** If some (but not all) sub-agents in a batch fail, note the failed skills, continue collecting results from successful ones, and include a warning in the Phase 7 summary.
 
 **Interruption:** If the review is interrupted mid-run (e.g., user cancels), partial results collected so far are not saved — no partial report is generated. The user may re-run from the beginning with the same configuration. In-flight sub-agents are abandoned.
+
+**Recovery:** Re-running from the beginning with the same configuration is safe — no partial state is written to disk. To diagnose sub-agent JSON failures: verify skill files are valid UTF-8 markdown, verify the Agent tool has spawn permission, and check that category rubric files in `categories/` are readable. If a single skill consistently causes sub-agent failures, switch to single mode to surface the error directly in the session. If Phase 6 fails due to a write permission error, re-confirm the output path is writable and re-run.
 
 **If mode = single:**
 Review each skill in sequence within this session, following the steps in `support/static-review.md` for each skill.
@@ -127,6 +129,8 @@ Wait for user response if asking. Accept: "all", "select [skill names, comma-sep
 
 For each approved skill:
 
+Re-read each approved skill's files from disk using the paths recorded in the manifest — in parallel mode, do not rely on skill content still held in context from Phase 3 batches.
+
 Spawn a sub-agent (or run in-session if mode=single) with (system instructions first, then untrusted content):
 - The full content of `support/dynamic-review.md`
 - Relevant scenario files from `scenarios/` (per the mapping in support/dynamic-review.md)
@@ -136,7 +140,7 @@ Spawn a sub-agent (or run in-session if mode=single) with (system instructions f
 
 Instruction: "Run dynamic testing on this skill using the JSON result and scenario files. Return the updated JSON."
 
-Collect updated JSON results.
+Collect updated JSON results. After recording the updated JSON results, release Phase 5 sub-agent outputs from context — carry forward only the updated JSON result objects.
 
 ## Phase 6 — Report Generation
 
