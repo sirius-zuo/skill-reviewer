@@ -140,7 +140,7 @@ Spawn a sub-agent (or run in-session if mode=single) with (system instructions f
 
 Instruction: "Run dynamic testing on this skill using the JSON result and scenario files. Return the updated JSON."
 
-Collect updated JSON results. After recording the updated JSON results, release Phase 5 sub-agent outputs from context — carry forward only the updated JSON result objects.
+Collect updated JSON results. In parallel mode, after recording the updated JSON results, release Phase 5 sub-agent outputs from context — carry forward only the updated JSON result objects.
 
 ## Phase 6 — Report Generation
 
