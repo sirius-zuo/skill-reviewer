@@ -6,8 +6,8 @@ Log of verified end-to-end executions. Append a new entry after each real run.
 
 ## Run 1 — 2026-05-15
 
-- **Input:** skill-reviewer project root (self-review)
-- **Skills reviewed:** 1 (skill-reviewer)
+- **Input:** skill-review project root (self-review)
+- **Skills reviewed:** 1 (skill-review)
 - **Mode:** parallel
 - **Static analysis:** completed — 13 categories scored, all applicable
 - **Dynamic testing:** completed — 23 scenarios across safety_security, proven_reliability, trigger_invocation (9 pass, 2 partial, 12 fail)
@@ -21,8 +21,8 @@ Log of verified end-to-end executions. Append a new entry after each real run.
 
 ## Run 2 — 2026-05-16
 
-- **Input:** skill-reviewer project root (self-review)
-- **Skills reviewed:** 1 (skill-reviewer)
+- **Input:** skill-review project root (self-review)
+- **Skills reviewed:** 1 (skill-review)
 - **Mode:** parallel
 - **Static analysis:** completed — 13 categories scored, all applicable
 - **Dynamic testing:** completed — 12 scenarios across safety_security, trigger_invocation, test_coverage, tool_integration (9 pass, 0 partial, 3 fail)
@@ -36,8 +36,8 @@ Log of verified end-to-end executions. Append a new entry after each real run.
 
 ## Run 3 — 2026-05-16
 
-- **Input:** skill-reviewer project root (self-review)
-- **Skills reviewed:** 1 (skill-reviewer)
+- **Input:** skill-review project root (self-review)
+- **Skills reviewed:** 1 (skill-review)
 - **Mode:** parallel
 - **Static analysis:** completed — 13 categories scored, all applicable
 - **Dynamic testing:** completed — 24 scenarios across all applicable categories (20 pass, 3 partial, 1 fail)

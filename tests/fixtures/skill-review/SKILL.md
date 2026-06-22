@@ -1,9 +1,9 @@
 ---
-name: skill-reviewer-tests
-description: Behavioral test cases for the skill-reviewer skill. These describe inputs and expected outputs for LLM-behavioral testing — they are not automated assertions.
+name: skill-review-tests
+description: Behavioral test cases for the skill-review skill. These describe inputs and expected outputs for LLM-behavioral testing — they are not automated assertions.
 ---
 
-# Skill Reviewer — Test Cases
+# Skill Review — Test Cases
 
 ## Test Case 1 — Happy Path
 

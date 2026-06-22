@@ -1,4 +1,4 @@
-# Skill Reviewer — Rubric Test Results
+# Skill Review — Rubric Test Results
 
 Generated: 2026-05-14
 

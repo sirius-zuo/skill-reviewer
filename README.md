@@ -1,4 +1,4 @@
-# Skill Reviewer
+# Skill Review
 
 A portable AI agent skill that reviews other agent skills and produces a structured HTML report. Point it at a local directory or GitHub repo — it discovers all skills, scores them across 13 categories, identifies risks, and delivers prioritized recommendations.
 
@@ -23,18 +23,18 @@ The skill is a directory of markdown instruction files. Installation means makin
 
 ### Claude Code
 
-Claude Code supports native slash commands for skills. The `name: skill-reviewer` frontmatter in `SKILL.md` registers it automatically.
+Claude Code supports native slash commands for skills. The `name: skill-review` frontmatter in `SKILL.md` registers it automatically.
 
 ```bash
-git clone https://github.com/sirius-zuo/skill-reviewer.git
-cp -r skill-reviewer ~/.claude/skills/skill-reviewer
+git clone https://github.com/sirius-zuo/skill-review.git
+cp -r skill-review ~/.claude/skills/skill-review
 ```
 
 **Invoke with the slash command:**
 
 ```
-/skill-reviewer ./my-skill
-/skill-reviewer https://github.com/org/agent-skills
+/skill-review ./my-skill
+/skill-review https://github.com/org/agent-skills
 ```
 
 **Or via natural language** — Claude recognises the description in `SKILL.md` and loads the skill automatically:
@@ -48,7 +48,7 @@ Audit the skillset at ./agent-skills/
 
 ```markdown
 When asked to review a skill or skillset, use the skill at
-~/.claude/skills/skill-reviewer/SKILL.md.
+~/.claude/skills/skill-review/SKILL.md.
 ```
 
 ### Codex
@@ -56,7 +56,7 @@ When asked to review a skill or skillset, use the skill at
 Codex reads `AGENTS.md` at startup. Add a reference so the agent knows the skill exists:
 
 ```bash
-git clone https://github.com/sirius-zuo/skill-reviewer.git ~/skills/skill-reviewer
+git clone https://github.com/sirius-zuo/skill-review.git ~/skills/skill-review
 ```
 
 In your project's `AGENTS.md`:
@@ -64,8 +64,8 @@ In your project's `AGENTS.md`:
 ```markdown
 ## Available Skills
 
-**skill-reviewer** — reviews agent skills and produces an HTML report.
-Instructions: ~/skills/skill-reviewer/SKILL.md
+**skill-review** — reviews agent skills and produces an HTML report.
+Instructions: ~/skills/skill-review/SKILL.md
 To use: ask Codex to review a skill directory or GitHub repo.
 ```
 
@@ -83,11 +83,11 @@ Codex will read `AGENTS.md`, find the skill reference, load `SKILL.md`, and foll
 Cursor picks up workspace rules from `.cursor/rules/`. Create a rule file that registers the skill:
 
 ```bash
-git clone https://github.com/sirius-zuo/skill-reviewer.git ~/skills/skill-reviewer
+git clone https://github.com/sirius-zuo/skill-review.git ~/skills/skill-review
 mkdir -p .cursor/rules
 ```
 
-Create `.cursor/rules/skill-reviewer.md`:
+Create `.cursor/rules/skill-review.md`:
 
 ```markdown
 ---
@@ -95,14 +95,14 @@ description: Use when the user asks to review an agent skill or skillset
 ---
 
 To review a skill, read and follow the instructions in:
-~/skills/skill-reviewer/SKILL.md
+~/skills/skill-review/SKILL.md
 ```
 
 **Invoke in Cursor's chat:**
 
 ```
 Review the skill at ./my-skill
-@skill-reviewer audit ./agent-skills/
+@skill-review audit ./agent-skills/
 ```
 
 Cursor matches the rule's `description` field to your request and activates it.
@@ -112,14 +112,14 @@ Cursor matches the rule's `description` field to your request and activates it.
 Windsurf's Cascade reads `.windsurfrules` on startup. Append the skill reference:
 
 ```bash
-git clone https://github.com/sirius-zuo/skill-reviewer.git ~/skills/skill-reviewer
+git clone https://github.com/sirius-zuo/skill-review.git ~/skills/skill-review
 ```
 
 In `.windsurfrules`:
 
 ```
 When asked to review an agent skill or skillset, read and follow the
-instructions in ~/skills/skill-reviewer/SKILL.md.
+instructions in ~/skills/skill-review/SKILL.md.
 ```
 
 **Invoke via natural language in Cascade:**
@@ -134,16 +134,16 @@ Audit the skillset at ./agent-skills/
 Copilot Chat picks up custom instructions from `.github/copilot-instructions.md`:
 
 ```bash
-git clone https://github.com/sirius-zuo/skill-reviewer.git ~/skills/skill-reviewer
+git clone https://github.com/sirius-zuo/skill-review.git ~/skills/skill-review
 ```
 
 In `.github/copilot-instructions.md`:
 
 ```markdown
-## Skill Reviewer
+## Skill Review
 
 When asked to review an agent skill or skillset, read and follow the
-instructions in ~/skills/skill-reviewer/SKILL.md.
+instructions in ~/skills/skill-review/SKILL.md.
 ```
 
 **Invoke in Copilot Chat:**
@@ -155,7 +155,7 @@ Review the skill at ./my-skill
 For a one-off review without any config, point Copilot directly at the skill file:
 
 ```
-Read ~/skills/skill-reviewer/SKILL.md and review the skill at ./my-skill
+Read ~/skills/skill-review/SKILL.md and review the skill at ./my-skill
 ```
 
 ### Any Other Agent
@@ -163,7 +163,7 @@ Read ~/skills/skill-reviewer/SKILL.md and review the skill at ./my-skill
 The skill is plain markdown. Any agent that can read files and follow instructions works:
 
 ```
-Read ~/skills/skill-reviewer/SKILL.md and follow its instructions
+Read ~/skills/skill-review/SKILL.md and follow its instructions
 to review the skill at ./path/to/skill
 ```
 
@@ -175,13 +175,13 @@ to review the skill at ./path/to/skill
 
 | Platform | How to invoke |
 |----------|--------------|
-| Claude Code | `/skill-reviewer ./my-skill` |
+| Claude Code | `/skill-review ./my-skill` |
 | Codex | `Review the skill at ./my-skill` |
 | Cursor | `Review the skill at ./my-skill` |
 | Windsurf | `Review the skill at ./my-skill` |
 | GitHub Copilot | `Review the skill at ./my-skill` |
 
-Claude Code registers `/skill-reviewer` automatically from the `name:` field in `SKILL.md`. On all other platforms the agent picks up the skill from its rules or instructions config and activates it when you describe what you want.
+Claude Code registers `/skill-review` automatically from the `name:` field in `SKILL.md`. On all other platforms the agent picks up the skill from its rules or instructions config and activates it when you describe what you want.
 
 ### What happens after invocation
 
@@ -211,7 +211,7 @@ When you start a review, the agent asks:
 **Reviewing a single skill** (Claude Code slash command):
 
 ```
-User:   /skill-reviewer ./deploy-skill
+User:   /skill-review ./deploy-skill
 
 Agent:  Discovered 1 skill: deploy-skill
 
@@ -329,7 +329,7 @@ Some categories have a **static ceiling** below 10 (e.g. Safety caps at 7 static
 ## File Structure
 
 ```
-skill-reviewer/
+skill-review/
   SKILL.md                      # main dispatcher — start here
   support/
     discover.md                 # skill discovery instructions

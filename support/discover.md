@@ -82,6 +82,6 @@ Produce a JSON manifest:
 - If NO skills are found: output `{ "skills": [], "error": "No skill files found in directory" }` and stop.
 - If a file has frontmatter but no `name:` field: treat as supporting artifact.
 - If two skills share the same `name`: flag as a conflict in the manifest with `"name_conflict": true`.
-- **Self-review guard:** After generating the manifest, compare the absolute `root_path` to the absolute path of the skill-reviewer's installation directory (the parent of the `support/` directory containing this file — the main agent knows this from where it found `support/discover.md`). If they are the same, emit a warning:
-  > "Warning: the provided path appears to be the skill-reviewer itself. Reviewing a skill against its own rubric may produce unreliable results. Do you want to proceed? [yes / no]"
+- **Self-review guard:** After generating the manifest, compare the absolute `root_path` to the absolute path of the skill-review's installation directory (the parent of the `support/` directory containing this file — the main agent knows this from where it found `support/discover.md`). If they are the same, emit a warning:
+  > "Warning: the provided path appears to be the skill-review itself. Reviewing a skill against its own rubric may produce unreliable results. Do you want to proceed? [yes / no]"
   If the user answers no, stop. If yes, proceed and set `"self_review": true` in the manifest (default is `false`).
